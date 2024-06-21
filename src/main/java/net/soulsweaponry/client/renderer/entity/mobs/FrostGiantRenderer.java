@@ -1,12 +1,12 @@
 package net.soulsweaponry.client.renderer.entity.mobs;
 
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import net.soulsweaponry.client.model.entity.mobs.FrostGiantModel;
 import net.soulsweaponry.entity.mobs.FrostGiant;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class FrostGiantRenderer extends GeoEntityRenderer<FrostGiant> {
 

@@ -1,5 +1,15 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -37,14 +47,7 @@ import net.soulsweaponry.registry.ItemRegistry;
 import net.soulsweaponry.registry.ParticleRegistry;
 import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.util.CustomDeathHandler;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import org.jetbrains.annotations.Nullable;
 
 public class ChaosMonarch extends BossEntity implements GeoEntity {
 
@@ -57,19 +60,7 @@ public class ChaosMonarch extends BossEntity implements GeoEntity {
         super(entityType, world, Color.PURPLE);
     }
 
-    private PlayState predicate(AnimationState<?> state) {
-        switch (this.getAttack()) {
-            case SPAWN -> state.getController().setAnimation(RawAnimation.begin().thenPlay("spawn"));
-            case TELEPORT -> state.getController().setAnimation(RawAnimation.begin().thenPlay("teleport"));
-            case MELEE -> state.getController().setAnimation(RawAnimation.begin().thenPlay("swing_staff"));
-            case LIGHTNING -> state.getController().setAnimation(RawAnimation.begin().thenPlay("lightning_call"));
-            case SHOOT -> state.getController().setAnimation(RawAnimation.begin().thenPlay("shoot"));
-            case BARRAGE -> state.getController().setAnimation(RawAnimation.begin().thenPlay("barrage"));
-            case DEATH -> state.getController().setAnimation(RawAnimation.begin().thenPlay("death"));
-            default -> state.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
-        }
-        return PlayState.CONTINUE;
-    }
+
 
     @Override
 	protected void initGoals() {
@@ -244,6 +235,36 @@ public class ChaosMonarch extends BossEntity implements GeoEntity {
         return Attack.values()[this.dataTracker.get(ATTACK)];
     }
 
+    @Override
+    public <D> @Nullable D getAnimData(SerializableDataTicket<D> dataTicket) {
+        return GeoEntity.super.getAnimData(dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
+        GeoEntity.super.setAnimData(dataTicket, data);
+    }
+
+    @Override
+    public void triggerAnim(@Nullable String controllerName, String animName) {
+        GeoEntity.super.triggerAnim(controllerName, animName);
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return GeoEntity.super.getTick(entity);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoEntity.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
+    }
+
     public enum Attack {
         IDLE, SPAWN, TELEPORT, MELEE, LIGHTNING, SHOOT, BARRAGE, DEATH
     }
@@ -280,12 +301,36 @@ public class ChaosMonarch extends BossEntity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
+    }
+
+    private PlayState predicate(AnimationState<GeoAnimatable> state) {
+        switch (this.getAttack()) {
+            case SPAWN -> state.getController().setAnimation(RawAnimation.begin().thenPlay("spawn"));
+            case TELEPORT -> state.getController().setAnimation(RawAnimation.begin().thenPlay("teleport"));
+            case MELEE -> state.getController().setAnimation(RawAnimation.begin().thenPlay("swing_staff"));
+            case LIGHTNING -> state.getController().setAnimation(RawAnimation.begin().thenPlay("lightning_call"));
+            case SHOOT -> state.getController().setAnimation(RawAnimation.begin().thenPlay("shoot"));
+            case BARRAGE -> state.getController().setAnimation(RawAnimation.begin().thenPlay("barrage"));
+            case DEATH -> state.getController().setAnimation(RawAnimation.begin().thenPlay("death"));
+            default -> state.getController().setAnimation(RawAnimation.begin().thenPlay("idle"));
+        }
+        return PlayState.CONTINUE;
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoEntity.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoEntity.super.shouldPlayAnimsWhileGamePaused();
     }
 
     @Override

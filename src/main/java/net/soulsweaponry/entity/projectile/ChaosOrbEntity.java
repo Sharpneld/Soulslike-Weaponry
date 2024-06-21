@@ -1,5 +1,14 @@
 package net.soulsweaponry.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FlyingItemEntity;
@@ -19,11 +28,6 @@ import net.soulsweaponry.entity.mobs.NightProwler;
 import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.registry.ItemRegistry;
 import net.soulsweaponry.registry.SoundRegistry;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
 
 public class ChaosOrbEntity extends Entity implements GeoEntity, FlyingItemEntity {
 
@@ -34,7 +38,7 @@ public class ChaosOrbEntity extends Entity implements GeoEntity, FlyingItemEntit
         super(entityType, world);
     }
 
-    private PlayState predicate(AnimationState<?> event){
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> event){
         event.getController().setAnimation(RawAnimation.begin().then("spin", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
@@ -118,7 +122,7 @@ public class ChaosOrbEntity extends Entity implements GeoEntity, FlyingItemEntit
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllerRegistrar.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
     }
 
     @Override

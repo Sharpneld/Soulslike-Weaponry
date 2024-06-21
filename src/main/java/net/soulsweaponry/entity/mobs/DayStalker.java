@@ -1,5 +1,15 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EntityStatuses;
@@ -33,11 +43,6 @@ import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.util.CustomDeathHandler;
 import net.soulsweaponry.particles.ParticleHandler;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -99,7 +104,7 @@ public class DayStalker extends BossEntity implements GeoEntity {
         this.dataTracker.set(INITIATING_PHASE_2, bl);
     }
 
-    private PlayState chains(AnimationState<?> state) {
+    private PlayState chains(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (!this.isInitiatingPhaseTwo() && this.isPhaseTwo()) {
             if (this.getAttackAnimation().equals(Attacks.FLAMES_REACH)) {
                 return PlayState.STOP;
@@ -110,7 +115,7 @@ public class DayStalker extends BossEntity implements GeoEntity {
         return PlayState.CONTINUE;
     }
 
-    private PlayState idles(AnimationState<?> state) {
+    private PlayState idles(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.isDead() || this.getAttackAnimation().equals(Attacks.DEATH) || this.getDeathTicks() > 0) {
             if (this.isPhaseTwo()) {
                 state.getController().setAnimation(RawAnimation.begin().then("death_2", Animation.LoopType.LOOP));
@@ -141,7 +146,7 @@ public class DayStalker extends BossEntity implements GeoEntity {
         return PlayState.CONTINUE;
     }
 
-    private PlayState attacks(AnimationState<?> state) {
+    private PlayState attacks(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.isDead()) return PlayState.STOP;
         if (this.isInitiatingPhaseTwo()) {
             state.getController().setAnimation(RawAnimation.begin().then("start_phase_2", Animation.LoopType.PLAY_ONCE));
@@ -236,14 +241,25 @@ public class DayStalker extends BossEntity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "idles", 0, this::idles));
-        controllers.add(new AnimationController<>(this, "attacks", 0, this::attacks));
-        controllers.add(new AnimationController<>(this, "chains", 0, this::chains));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "idles", 0, this::idles));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "attacks", 0, this::attacks));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "chains", 0, this::chains));
     }
+
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoEntity.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoEntity.super.shouldPlayAnimsWhileGamePaused();
     }
 
     @Override
@@ -278,6 +294,36 @@ public class DayStalker extends BossEntity implements GeoEntity {
 
     public boolean isPartner(LivingEntity living) {
         return this.getPartnerUuid() != null && living.getUuid() != null && this.getPartnerUuid().equals(living.getUuid());
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(SerializableDataTicket<D> dataTicket) {
+        return GeoEntity.super.getAnimData(dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
+        GeoEntity.super.setAnimData(dataTicket, data);
+    }
+
+    @Override
+    public void triggerAnim(@Nullable String controllerName, String animName) {
+        GeoEntity.super.triggerAnim(controllerName, animName);
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return GeoEntity.super.getTick(entity);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoEntity.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
     }
 
     public enum Attacks {

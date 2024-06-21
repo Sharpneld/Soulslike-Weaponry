@@ -1,8 +1,8 @@
 package net.soulsweaponry.client.renderer.item;
 
+import mod.azure.azurelib.renderer.GeoItemRenderer;
 import net.soulsweaponry.client.model.item.SoulReaperModel;
 import net.soulsweaponry.items.SoulReaper;
-import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class SoulReaperRenderer extends GeoItemRenderer<SoulReaper> {
 

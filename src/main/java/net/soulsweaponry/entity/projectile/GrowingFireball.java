@@ -1,5 +1,15 @@
 package net.soulsweaponry.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -25,11 +35,6 @@ import net.soulsweaponry.entity.mobs.NightProwler;
 import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.entitydata.ParryData;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -226,18 +231,58 @@ public class GrowingFireball extends UntargetableFireball implements GeoEntity {
         }
     }
 
-    private PlayState predicate(AnimationState<?> event){
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> event){
         event.getController().setAnimation(RawAnimation.begin().then("spin2", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllerRegistrar.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoEntity.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoEntity.super.shouldPlayAnimsWhileGamePaused();
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(SerializableDataTicket<D> dataTicket) {
+        return GeoEntity.super.getAnimData(dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
+        GeoEntity.super.setAnimData(dataTicket, data);
+    }
+
+    @Override
+    public void triggerAnim(@Nullable String controllerName, String animName) {
+        GeoEntity.super.triggerAnim(controllerName, animName);
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return GeoEntity.super.getTick(entity);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoEntity.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
     }
 }

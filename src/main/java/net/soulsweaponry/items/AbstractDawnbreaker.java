@@ -1,5 +1,7 @@
 package net.soulsweaponry.items;
 
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.core.animation.AnimatableManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -17,8 +19,6 @@ import net.soulsweaponry.registry.EffectRegistry;
 import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.particles.ParticleEvents;
 import net.soulsweaponry.particles.ParticleHandler;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animation.AnimatableManager;
 
 import java.util.List;
 

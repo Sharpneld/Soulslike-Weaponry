@@ -1,10 +1,9 @@
 package net.soulsweaponry.client.model.entity.mobs;
 
+import mod.azure.azurelib.model.DefaultedEntityGeoModel;
 import net.minecraft.util.Identifier;
 import net.soulsweaponry.SoulsWeaponry;
 import net.soulsweaponry.entity.mobs.DayStalker;
-import software.bernie.geckolib.model.DefaultedEntityGeoModel;
-import software.bernie.geckolib.model.GeoModel;
 
 public class DayStalkerModel extends DefaultedEntityGeoModel<DayStalker> {
 

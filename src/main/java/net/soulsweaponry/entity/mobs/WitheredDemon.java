@@ -25,14 +25,14 @@ import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.registry.ItemRegistry;
 import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.util.IAnimatedDeath;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 
 import java.util.Random;
 
@@ -50,7 +50,7 @@ public class WitheredDemon extends HostileEntity implements GeoEntity, IAnimated
         this.experiencePoints = 20;
     }
 
-    private PlayState predicate(AnimationState<?> state) {
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.getDeath()) {
             state.getController().setAnimation(RawAnimation.begin().thenPlay("death"));
         } else if (this.getSwingArm()) {

@@ -35,7 +35,6 @@ import net.soulsweaponry.registry.ParticleRegistry;
 import net.soulsweaponry.registry.RecipeRegistry;
 import net.soulsweaponry.registry.SpawnInit;
 import net.soulsweaponry.registry.WeaponRegistry;
-import software.bernie.geckolib.GeckoLib;
 
 import java.util.ArrayList;
 
@@ -51,7 +50,6 @@ public class SoulsWeaponry implements ModInitializer {
         long start = System.currentTimeMillis();
         MidnightConfig.init(ModId, ConfigConstructor.class);
         LOGGER.info("Config initialized!");
-        GeckoLib.initialize();
         LOGGER.info("Successfully initialized Geckolib!");
         BlockRegistry.init();
         ItemRegistry.init();

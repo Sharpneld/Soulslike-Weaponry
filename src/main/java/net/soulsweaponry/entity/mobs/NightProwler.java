@@ -1,5 +1,6 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.core.animation.Animation;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -37,12 +38,14 @@ import net.soulsweaponry.registry.*;
 import net.soulsweaponry.util.CustomDeathHandler;
 import net.soulsweaponry.particles.ParticleHandler;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -105,7 +108,7 @@ public class NightProwler extends BossEntity implements GeoEntity {
         this.dataTracker.set(INITIATING_PHASE_2, bl);
     }
 
-    private PlayState attacks(AnimationState<?> state) {
+    private PlayState attacks(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.isDead()) return PlayState.STOP;
         if (this.isInitiatingPhaseTwo()) {
             state.getController().setAnimation(RawAnimation.begin().then("start_phase_2", Animation.LoopType.PLAY_ONCE));
@@ -149,7 +152,7 @@ public class NightProwler extends BossEntity implements GeoEntity {
         return PlayState.CONTINUE;
     }
 
-    private PlayState idle(AnimationState<?> state) {
+    private PlayState idle(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.isDead() || this.getAttackAnimation().equals(Attacks.DEATH) || this.getDeathTicks() > 0) {
             if (this.isPhaseTwo()) {
                 state.getController().setAnimation(RawAnimation.begin().then("death_2", Animation.LoopType.LOOP));
@@ -170,14 +173,14 @@ public class NightProwler extends BossEntity implements GeoEntity {
         return PlayState.CONTINUE;
     }
 
-    private PlayState cape(AnimationState<?> state) {
+    private PlayState cape(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (!this.isInitiatingPhaseTwo() && this.isPhaseTwo()) {
             state.getController().setAnimation(RawAnimation.begin().then("cape_2", Animation.LoopType.LOOP));
         }
         return PlayState.CONTINUE;
     }
 
-    private PlayState flying(AnimationState<?> state) {
+    private PlayState flying(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (!this.isFlying()) {
             return PlayState.STOP;
         } else {

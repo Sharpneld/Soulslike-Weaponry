@@ -1,5 +1,6 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.core.animation.Animation;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.control.MoveControl;
@@ -31,12 +32,14 @@ import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.registry.ParticleRegistry;
 import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.util.CustomDeathHandler;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 
 public class NightShade extends BossEntity implements GeoEntity {
     private final AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
@@ -282,7 +285,7 @@ public class NightShade extends BossEntity implements GeoEntity {
         }
     }
 
-    private PlayState predicate(AnimationState<?> state) {
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.isDead()) {
             state.getController().setAnimation(RawAnimation.begin().then("death", Animation.LoopType.HOLD_ON_LAST_FRAME));
         }

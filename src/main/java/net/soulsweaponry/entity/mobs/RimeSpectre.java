@@ -1,5 +1,6 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.core.animation.Animation;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.*;
@@ -29,12 +30,14 @@ import net.soulsweaponry.registry.EffectRegistry;
 import net.soulsweaponry.util.IAnimatedDeath;
 import net.soulsweaponry.particles.ParticleEvents;
 import net.soulsweaponry.particles.ParticleHandler;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 
 import java.util.EnumSet;
 
@@ -134,7 +137,7 @@ public class RimeSpectre extends Remnant implements GeoEntity, IAnimatedDeath {
         }
     }
 
-    private PlayState predicate(AnimationState<?> state) {
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.isDead()) {
             state.getController().setAnimation(RawAnimation.begin().then("death", Animation.LoopType.HOLD_ON_LAST_FRAME));
         } else if (this.isSitting()) {
@@ -147,7 +150,7 @@ public class RimeSpectre extends Remnant implements GeoEntity, IAnimatedDeath {
         return PlayState.CONTINUE;
     }
 
-    private PlayState idle(AnimationState<?> state) {
+    private PlayState idle(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         state.getController().setAnimation(RawAnimation.begin().then("idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }

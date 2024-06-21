@@ -1,5 +1,14 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
@@ -31,14 +40,7 @@ import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.util.CustomDeathHandler;
 import net.soulsweaponry.particles.ParticleEvents;
 import net.soulsweaponry.particles.ParticleHandler;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,24 +61,7 @@ public class AccursedLordBoss extends BossEntity implements GeoEntity {
         return true;
     }
 
-    private PlayState attackAnimations(AnimationState<?> state) {
-        switch (this.getAttackAnimation()) {
-            case FIREBALLS, WITHERBALLS ->
-                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.shootFireMouth"));
-            case HAND_SLAM ->
-                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.groundSlamHand"));
-            case HEATWAVE ->
-                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.explosion"));
-            case PULL -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.pull"));
-            case SPIN -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.spin"));
-            case SWORDSLAM ->
-                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.swordSlam"));
-            case DEATH -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.death"));
-            case SPAWN -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.spawn"));
-            default -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.idle"));
-        }
-        return PlayState.CONTINUE;
-    }
+
 
     @Override
     public int getTicksUntilDeath() {
@@ -229,12 +214,41 @@ public class AccursedLordBoss extends BossEntity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::attackAnimations));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::attackAnimations));
+    }
+
+    private PlayState attackAnimations(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
+        switch (this.getAttackAnimation()) {
+            case FIREBALLS, WITHERBALLS ->
+                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.shootFireMouth"));
+            case HAND_SLAM ->
+                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.groundSlamHand"));
+            case HEATWAVE ->
+                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.explosion"));
+            case PULL -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.pull"));
+            case SPIN -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.spin"));
+            case SWORDSLAM ->
+                    state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.swordSlam"));
+            case DEATH -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.death"));
+            case SPAWN -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.spawn"));
+            default -> state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.model.idle"));
+        }
+        return PlayState.CONTINUE;
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoEntity.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoEntity.super.shouldPlayAnimsWhileGamePaused();
     }
 
     protected SoundEvent getAmbientSound() {
@@ -247,6 +261,36 @@ public class AccursedLordBoss extends BossEntity implements GeoEntity {
   
     protected SoundEvent getDeathSound() {
         return SoundRegistry.DEMON_BOSS_DEATH_EVENT;
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(SerializableDataTicket<D> dataTicket) {
+        return GeoEntity.super.getAnimData(dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
+        GeoEntity.super.setAnimData(dataTicket, data);
+    }
+
+    @Override
+    public void triggerAnim(@Nullable String controllerName, String animName) {
+        GeoEntity.super.triggerAnim(controllerName, animName);
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return GeoEntity.super.getTick(entity);
+    }
+
+    @Override
+    public mod.azure.azurelib.core.animatable.instance.@Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoEntity.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
     }
 
     public enum AccursedLordAnimations {

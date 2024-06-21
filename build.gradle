@@ -17,6 +17,7 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 
+	maven {url 'https://libs.azuredoom.com:4443/mods'}
 	maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 	maven { url 'https://maven.blamejared.com' }
 	mavenCentral()
@@ -47,7 +48,10 @@ dependencies {
 
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 
-	modImplementation "software.bernie.geckolib:geckolib-fabric-1.20:${project.geckolib_version}"
+	//Fabric or Quilt and older
+	modImplementation "mod.azure.azurelib:azurelib-fabric-1.20.1:${project.azure_lib_version}"
+	//modApi "com.terraformersmc:modmenu:VERSION" // Fabric bug is requiring this
+
 	modImplementation "curse.maven:attributefix-${project.attributefix}"
 	//Runtime only
 	modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") {

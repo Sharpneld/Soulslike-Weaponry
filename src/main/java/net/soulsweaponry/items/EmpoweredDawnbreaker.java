@@ -1,5 +1,9 @@
 package net.soulsweaponry.items;
 
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -27,10 +31,6 @@ import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.util.IKeybindAbility;
 import net.soulsweaponry.util.WeaponUtil;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.function.Supplier;
  */
 public class EmpoweredDawnbreaker extends AbstractDawnbreaker implements IKeybindAbility {
 
-    private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public EmpoweredDawnbreaker(ToolMaterial toolMaterial, float attackSpeed, Settings settings) {

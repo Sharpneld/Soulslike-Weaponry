@@ -3,7 +3,7 @@ package net.soulsweaponry.client.model.entity.projectile;
 import net.minecraft.util.Identifier;
 import net.soulsweaponry.SoulsWeaponry;
 import net.soulsweaponry.entity.projectile.GrowingFireball;
-import software.bernie.geckolib.model.GeoModel;
+import mod.azure.azurelib.model.GeoModel;
 
 public class GrowingFireballModel extends GeoModel<GrowingFireball> {
 

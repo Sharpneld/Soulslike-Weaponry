@@ -29,14 +29,15 @@ import net.soulsweaponry.util.IAnimatedDeath;
 import net.soulsweaponry.particles.ParticleEvents;
 import net.soulsweaponry.particles.ParticleHandler;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
 
 public class FrostGiant extends Remnant implements GeoEntity, IAnimatedDeath {
 
@@ -73,7 +74,7 @@ public class FrostGiant extends Remnant implements GeoEntity, IAnimatedDeath {
         this.targetSelector.add(5, new RevengeGoal(this).setGroupRevenge());
     }
 
-    private PlayState predicate(AnimationState<?> state) {
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.isDead()) {
             state.getController().setAnimation(RawAnimation.begin().thenPlay("death"));
         } else if (this.isSmashing()) {

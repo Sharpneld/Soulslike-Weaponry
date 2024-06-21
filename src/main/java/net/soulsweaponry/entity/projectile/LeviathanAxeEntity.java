@@ -1,5 +1,14 @@
 package net.soulsweaponry.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -14,11 +23,6 @@ import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.registry.WeaponRegistry;
 import net.soulsweaponry.particles.ParticleEvents;
 import net.soulsweaponry.util.WeaponUtil;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
 
 public class LeviathanAxeEntity extends ReturningProjectile implements GeoEntity {
 
@@ -69,7 +73,7 @@ public class LeviathanAxeEntity extends ReturningProjectile implements GeoEntity
         }
     }
 
-    private PlayState predicate(AnimationState<?> state) {
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         if (this.dealtDamage) return PlayState.STOP;
         state.getController().setAnimation(RawAnimation.begin().then("spin", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
@@ -77,7 +81,7 @@ public class LeviathanAxeEntity extends ReturningProjectile implements GeoEntity
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
     }
 
     @Override

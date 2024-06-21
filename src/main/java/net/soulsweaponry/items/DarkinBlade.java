@@ -1,18 +1,38 @@
 package net.soulsweaponry.items;
 
+import com.google.common.collect.Multimap;
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
+import mod.azure.azurelib.platform.services.AzureLibNetwork;
+import mod.azure.azurelib.util.AzureLibUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -21,12 +41,6 @@ import net.soulsweaponry.config.ConfigConstructor;
 import net.soulsweaponry.registry.EffectRegistry;
 import net.soulsweaponry.util.WeaponUtil;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +50,7 @@ import java.util.function.Supplier;
 
 public class DarkinBlade extends UltraHeavyWeapon implements GeoItem {
 
-    private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
     
     public DarkinBlade(ToolMaterial toolMaterial, float attackSpeed, Settings settings) {
@@ -90,20 +104,31 @@ public class DarkinBlade extends UltraHeavyWeapon implements GeoItem {
         super.appendTooltip(stack, world, tooltip, context);
     }
 
-    private PlayState predicate(AnimationState<?> event){
+    private PlayState predicate(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> event){
         event.getController().setAnimation(RawAnimation.begin().then("heartbeat", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "controller", 20, this::predicate));
+        data.add(new AnimationController<GeoAnimatable>(this, "controller", 20, this::predicate));
     }
+
 
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoItem.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoItem.super.shouldPlayAnimsWhileGamePaused();
     }
 
     @Override
@@ -153,5 +178,80 @@ public class DarkinBlade extends UltraHeavyWeapon implements GeoItem {
         Map<ParticleEffect, Vec3d> map = new HashMap<>();
         map.put(ParticleTypes.FLAME, new Vec3d(1, 6, 1));
         return map;
+    }
+
+    @Override
+    public double getTick(Object itemStack) {
+        return GeoItem.super.getTick(itemStack);
+    }
+
+    @Override
+    public boolean isPerspectiveAware() {
+        return GeoItem.super.isPerspectiveAware();
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(long instanceId, SerializableDataTicket<D> dataTicket) {
+        return GeoItem.super.getAnimData(instanceId, dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(Entity relatedEntity, long instanceId, SerializableDataTicket<D> dataTicket, D data) {
+        GeoItem.super.setAnimData(relatedEntity, instanceId, dataTicket, data);
+    }
+
+    @Override
+    public <D> void syncAnimData(long instanceId, SerializableDataTicket<D> dataTicket, D data, Entity entityToTrack) {
+        GeoItem.super.syncAnimData(instanceId, dataTicket, data, entityToTrack);
+    }
+
+    @Override
+    public void triggerAnim(Entity relatedEntity, long instanceId, @Nullable String controllerName, String animName) {
+        GeoItem.super.triggerAnim(relatedEntity, instanceId, controllerName, animName);
+    }
+
+    @Override
+    public void triggerAnim(long instanceId, @Nullable String controllerName, String animName, AzureLibNetwork.IPacketCallback packetCallback) {
+        GeoItem.super.triggerAnim(instanceId, controllerName, animName, packetCallback);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoItem.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        return super.allowNbtUpdateAnimation(player, hand, oldStack, newStack);
+    }
+
+    @Override
+    public boolean allowContinuingBlockBreaking(PlayerEntity player, ItemStack oldStack, ItemStack newStack) {
+        return super.allowContinuingBlockBreaking(player, oldStack, newStack);
+    }
+
+    @Override
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+        return super.getAttributeModifiers(stack, slot);
+    }
+
+    @Override
+    public boolean isSuitableFor(ItemStack stack, BlockState state) {
+        return super.isSuitableFor(stack, state);
+    }
+
+    @Override
+    public ItemStack getRecipeRemainder(ItemStack stack) {
+        return super.getRecipeRemainder(stack);
+    }
+
+    @Override
+    public boolean isEnabled(FeatureSet enabledFeatures) {
+        return super.isEnabled(enabledFeatures);
+    }
+
+    @Override
+    public void gainStrength(LivingEntity user) {
+        super.gainStrength(user);
     }
 }

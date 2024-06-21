@@ -1,8 +1,8 @@
 package net.soulsweaponry.client.renderer.item;
 
+import mod.azure.azurelib.renderer.GeoItemRenderer;
 import net.soulsweaponry.client.model.item.EmpoweredDawnbreakerModel;
 import net.soulsweaponry.items.EmpoweredDawnbreaker;
-import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class EmpoweredDawnbreakerRenderer extends GeoItemRenderer<EmpoweredDawnbreaker> {
 

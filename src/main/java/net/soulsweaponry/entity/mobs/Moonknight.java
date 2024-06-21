@@ -1,5 +1,7 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.keyframe.event.ParticleKeyframeEvent;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -33,15 +35,14 @@ import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.util.CustomDeathHandler;
 import net.soulsweaponry.particles.ParticleEvents;
 import net.soulsweaponry.particles.ParticleHandler;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.keyframe.event.ParticleKeyframeEvent;
-import software.bernie.geckolib.core.object.PlayState;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 
 public class Moonknight extends BossEntity implements GeoEntity {
 
@@ -394,53 +395,7 @@ public class Moonknight extends BossEntity implements GeoEntity {
         controller.setParticleKeyframeHandler(this::particleListener);
     }
 
-    private void particleListener(ParticleKeyframeEvent<Moonknight> moonknightParticleKeyframeEvent) {
-        this.setChargingSword(!this.isSwordCharging());
-    }
-
-    @Override
-	protected void initGoals() {
-        this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new MoonknightGoal(this));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 12.0F));
-        this.goalSelector.add(8, new LookAroundGoal(this));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.add(5, (new RevengeGoal(this)).setGroupRevenge());
-		super.initGoals();
-	}
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return factory;
-    }
-
-    protected SoundEvent getAmbientSound() {
-        return SoundRegistry.DEATH_SCREAMS_EVENT;
-    }
-
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundRegistry.KNIGHT_HIT_EVENT;
-    }
-
-    protected SoundEvent getDeathSound() {
-        return SoundRegistry.KNIGHT_DEATH_EVENT;
-    }
-
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(SPAWNING, Boolean.FALSE);
-        this.dataTracker.startTracking(PHASE_2, Boolean.FALSE);
-        this.dataTracker.startTracking(INITIATE_PHASE_2, Boolean.FALSE);
-        this.dataTracker.startTracking(UNBREAKABLE, Boolean.FALSE);
-        this.dataTracker.startTracking(CAN_BEAM, Boolean.FALSE);
-        this.dataTracker.startTracking(IS_SWORD_CHARGING, Boolean.FALSE);
-        this.dataTracker.startTracking(ATTACK, 0);
-        this.dataTracker.startTracking(BEAM_LOCATION, new BlockPos(0, 0, 0));
-        this.dataTracker.startTracking(BEAM_HEIGHT, 0f);
-        this.dataTracker.startTracking(INCREASING_BEAM_HEIGHT, false);
-    }
-
-    private PlayState predicate(AnimationState<?> state) {
+    private PlayState predicate(AnimationState<Moonknight> state) {
         if (this.isDead()) {
             state.getController().setAnimation(RawAnimation.begin().thenPlay("death_phase_2"));
         } else if (this.getSpawning()) {
@@ -495,6 +450,53 @@ public class Moonknight extends BossEntity implements GeoEntity {
         }
         return PlayState.CONTINUE;
     }
+
+    private void particleListener(ParticleKeyframeEvent<Moonknight> moonknightParticleKeyframeEvent) {
+        this.setChargingSword(!this.isSwordCharging());
+    }
+
+    @Override
+	protected void initGoals() {
+        this.goalSelector.add(0, new SwimGoal(this));
+        this.goalSelector.add(1, new MoonknightGoal(this));
+        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 12.0F));
+        this.goalSelector.add(8, new LookAroundGoal(this));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.add(5, (new RevengeGoal(this)).setGroupRevenge());
+		super.initGoals();
+	}
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return factory;
+    }
+
+    protected SoundEvent getAmbientSound() {
+        return SoundRegistry.DEATH_SCREAMS_EVENT;
+    }
+
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return SoundRegistry.KNIGHT_HIT_EVENT;
+    }
+
+    protected SoundEvent getDeathSound() {
+        return SoundRegistry.KNIGHT_DEATH_EVENT;
+    }
+
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SPAWNING, Boolean.FALSE);
+        this.dataTracker.startTracking(PHASE_2, Boolean.FALSE);
+        this.dataTracker.startTracking(INITIATE_PHASE_2, Boolean.FALSE);
+        this.dataTracker.startTracking(UNBREAKABLE, Boolean.FALSE);
+        this.dataTracker.startTracking(CAN_BEAM, Boolean.FALSE);
+        this.dataTracker.startTracking(IS_SWORD_CHARGING, Boolean.FALSE);
+        this.dataTracker.startTracking(ATTACK, 0);
+        this.dataTracker.startTracking(BEAM_LOCATION, new BlockPos(0, 0, 0));
+        this.dataTracker.startTracking(BEAM_HEIGHT, 0f);
+        this.dataTracker.startTracking(INCREASING_BEAM_HEIGHT, false);
+    }
+
 
     public enum MoonknightPhaseOne {
         IDLE,

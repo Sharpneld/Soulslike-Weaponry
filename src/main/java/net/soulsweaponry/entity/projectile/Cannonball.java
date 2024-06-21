@@ -1,14 +1,15 @@
 package net.soulsweaponry.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import net.soulsweaponry.registry.EntityRegistry;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 
-public class Cannonball extends SilverBulletEntity implements GeoEntity {
+public class Cannonball extends SilverBulletEntity implements GeoEntity, GeoAnimatable{
 
     private final AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
 

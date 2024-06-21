@@ -1,12 +1,12 @@
 package net.soulsweaponry.client.renderer.entity.mobs;
 
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.soulsweaponry.client.model.entity.mobs.AccursedLordBossModel;
 import net.soulsweaponry.entity.mobs.AccursedLordBoss;
 import net.soulsweaponry.util.CustomDeathHandler;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class AccursedLordBossRenderer extends GeoEntityRenderer<AccursedLordBoss> {
 

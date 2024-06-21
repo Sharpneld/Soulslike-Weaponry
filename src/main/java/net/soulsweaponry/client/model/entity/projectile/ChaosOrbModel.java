@@ -1,9 +1,10 @@
 package net.soulsweaponry.client.model.entity.projectile;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
 import net.soulsweaponry.SoulsWeaponry;
 import net.soulsweaponry.entity.projectile.ChaosOrbEntity;
-import software.bernie.geckolib.model.GeoModel;
+
 
 public class ChaosOrbModel extends GeoModel<ChaosOrbEntity> {
 

@@ -1,5 +1,10 @@
 package net.soulsweaponry.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -22,10 +27,7 @@ import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.util.CustomDamageSource;
 import net.soulsweaponry.particles.ParticleEvents;
 import net.soulsweaponry.particles.ParticleHandler;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
+import org.jetbrains.annotations.Nullable;
 
 public class ShadowOrb extends AbstractFireballEntity implements GeoEntity {
 
@@ -105,5 +107,45 @@ public class ShadowOrb extends AbstractFireballEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoEntity.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoEntity.super.shouldPlayAnimsWhileGamePaused();
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(SerializableDataTicket<D> dataTicket) {
+        return GeoEntity.super.getAnimData(dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
+        GeoEntity.super.setAnimData(dataTicket, data);
+    }
+
+    @Override
+    public void triggerAnim(@Nullable String controllerName, String animName) {
+        GeoEntity.super.triggerAnim(controllerName, animName);
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return GeoEntity.super.getTick(entity);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoEntity.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
     }
 }

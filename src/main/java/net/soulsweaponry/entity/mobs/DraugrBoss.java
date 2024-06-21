@@ -1,5 +1,15 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.Animation;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -27,12 +37,7 @@ import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.registry.ParticleRegistry;
 import net.soulsweaponry.registry.SoundRegistry;
 import net.soulsweaponry.util.CustomDeathHandler;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -55,7 +60,7 @@ public class DraugrBoss extends BossEntity implements GeoEntity {
     private static final TrackedData<BlockPos> POS = DataTracker.registerData(DraugrBoss.class, TrackedDataHandlerRegistry.BLOCK_POS);
     private static final TrackedData<Integer> SAME_WEAPON_COUNT = DataTracker.registerData(DraugrBoss.class, TrackedDataHandlerRegistry.INTEGER);
 
-    private PlayState attackAnimations(AnimationState<?> event) {
+    private PlayState attackAnimations(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> event) {
         if (this.isPostureBroken()) {
             event.getController().setAnimation(RawAnimation.begin().then("posture_break", Animation.LoopType.HOLD_ON_LAST_FRAME));
         } else {
@@ -170,6 +175,36 @@ public class DraugrBoss extends BossEntity implements GeoEntity {
 
     public States getState() {
         return States.values()[this.dataTracker.get(STATES)];
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(SerializableDataTicket<D> dataTicket) {
+        return GeoEntity.super.getAnimData(dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
+        GeoEntity.super.setAnimData(dataTicket, data);
+    }
+
+    @Override
+    public void triggerAnim(@Nullable String controllerName, String animName) {
+        GeoEntity.super.triggerAnim(controllerName, animName);
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return GeoEntity.super.getTick(entity);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoEntity.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
     }
 
     public enum States {
@@ -341,12 +376,23 @@ public class DraugrBoss extends BossEntity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::attackAnimations));
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::attackAnimations));
     }
+
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoEntity.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoEntity.super.shouldPlayAnimsWhileGamePaused();
     }
 
     protected SoundEvent getAmbientSound() {

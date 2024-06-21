@@ -1,13 +1,13 @@
 package net.soulsweaponry.client.renderer.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class GeoProjectileRenderer<T extends PersistentProjectileEntity & GeoEntity> extends GeoEntityRenderer<T> {
 

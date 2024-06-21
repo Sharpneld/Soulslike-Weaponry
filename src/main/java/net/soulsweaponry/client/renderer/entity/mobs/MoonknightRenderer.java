@@ -1,5 +1,6 @@
 package net.soulsweaponry.client.renderer.entity.mobs;
 
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -16,7 +17,6 @@ import net.soulsweaponry.entity.mobs.Moonknight;
 import net.soulsweaponry.util.CustomDeathHandler;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class MoonknightRenderer extends GeoEntityRenderer<Moonknight> {
 

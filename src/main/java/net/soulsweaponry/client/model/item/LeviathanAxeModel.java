@@ -1,9 +1,9 @@
 package net.soulsweaponry.client.model.item;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
 import net.soulsweaponry.SoulsWeaponry;
 import net.soulsweaponry.items.LeviathanAxe;
-import software.bernie.geckolib.model.GeoModel;
 
 public class LeviathanAxeModel extends GeoModel<LeviathanAxe> {
 

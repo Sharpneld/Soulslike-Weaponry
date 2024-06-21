@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.soulsweaponry.client.renderer.item.DawnbreakerRenderer;
 import net.soulsweaponry.util.WeaponUtil;
@@ -16,14 +20,11 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import net.soulsweaponry.config.ConfigConstructor;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Dawnbreaker extends AbstractDawnbreaker {
 
-    private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
+
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
     
     public Dawnbreaker(ToolMaterial toolMaterial, float attackSpeed, Settings settings) {

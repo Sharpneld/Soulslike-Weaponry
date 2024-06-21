@@ -1,15 +1,23 @@
 package net.soulsweaponry.items;
 
+import com.google.common.collect.Multimap;
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.network.SerializableDataTicket;
+import mod.azure.azurelib.platform.services.AzureLibNetwork;
+import mod.azure.azurelib.util.AzureLibUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.soulsweaponry.client.renderer.item.ForlornScytheRenderer;
 import net.soulsweaponry.config.ConfigConstructor;
 import net.soulsweaponry.util.WeaponUtil;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -22,6 +30,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +42,7 @@ public class ForlornScythe extends SoulHarvestingItem implements GeoItem {
 
     private static final String CRITICAL = "3rd_shot";
     private static final String PREV_UUID = "prev_projectile_uuid";
-    private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public ForlornScythe(ToolMaterial toolMaterial, float attackSpeed, Settings settings) {
@@ -118,9 +127,20 @@ public class ForlornScythe extends SoulHarvestingItem implements GeoItem {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
 
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.factory;
+    }
+
+    @Override
+    public double getBoneResetTime() {
+        return GeoItem.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoItem.super.shouldPlayAnimsWhileGamePaused();
     }
 
     @Override
@@ -139,5 +159,74 @@ public class ForlornScythe extends SoulHarvestingItem implements GeoItem {
     public Supplier<Object> getRenderProvider() {
         return this.renderProvider;
     }
-    
+
+    @Override
+    public double getTick(Object itemStack) {
+        return GeoItem.super.getTick(itemStack);
+    }
+
+    @Override
+    public boolean isPerspectiveAware() {
+        return GeoItem.super.isPerspectiveAware();
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(long instanceId, SerializableDataTicket<D> dataTicket) {
+        return GeoItem.super.getAnimData(instanceId, dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(Entity relatedEntity, long instanceId, SerializableDataTicket<D> dataTicket, D data) {
+        GeoItem.super.setAnimData(relatedEntity, instanceId, dataTicket, data);
+    }
+
+    @Override
+    public <D> void syncAnimData(long instanceId, SerializableDataTicket<D> dataTicket, D data, Entity entityToTrack) {
+        GeoItem.super.syncAnimData(instanceId, dataTicket, data, entityToTrack);
+    }
+
+    @Override
+    public void triggerAnim(Entity relatedEntity, long instanceId, @Nullable String controllerName, String animName) {
+        GeoItem.super.triggerAnim(relatedEntity, instanceId, controllerName, animName);
+    }
+
+    @Override
+    public void triggerAnim(long instanceId, @Nullable String controllerName, String animName, AzureLibNetwork.IPacketCallback packetCallback) {
+        GeoItem.super.triggerAnim(instanceId, controllerName, animName, packetCallback);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoItem.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        return super.allowNbtUpdateAnimation(player, hand, oldStack, newStack);
+    }
+
+    @Override
+    public boolean allowContinuingBlockBreaking(PlayerEntity player, ItemStack oldStack, ItemStack newStack) {
+        return super.allowContinuingBlockBreaking(player, oldStack, newStack);
+    }
+
+    @Override
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+        return super.getAttributeModifiers(stack, slot);
+    }
+
+    @Override
+    public boolean isSuitableFor(ItemStack stack, BlockState state) {
+        return super.isSuitableFor(stack, state);
+    }
+
+    @Override
+    public ItemStack getRecipeRemainder(ItemStack stack) {
+        return super.getRecipeRemainder(stack);
+    }
+
+    @Override
+    public boolean isEnabled(FeatureSet enabledFeatures) {
+        return super.isEnabled(enabledFeatures);
+    }
 }

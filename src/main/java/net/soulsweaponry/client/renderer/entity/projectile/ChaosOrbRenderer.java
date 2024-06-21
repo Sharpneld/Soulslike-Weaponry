@@ -1,5 +1,9 @@
 package net.soulsweaponry.client.renderer.entity.projectile;
 
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.renderer.GeoRenderer;
+import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -10,10 +14,6 @@ import net.minecraft.util.Identifier;
 import net.soulsweaponry.SoulsWeaponry;
 import net.soulsweaponry.client.model.entity.projectile.ChaosOrbModel;
 import net.soulsweaponry.entity.projectile.ChaosOrbEntity;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.GeoRenderer;
-import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.util.Random;
 

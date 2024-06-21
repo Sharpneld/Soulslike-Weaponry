@@ -1,5 +1,6 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.core.animation.Animation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -27,11 +28,14 @@ import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import net.soulsweaponry.registry.SoundRegistry;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 
 import java.util.EnumSet;
 
@@ -56,7 +60,7 @@ public class WarmthEntity extends TameableEntity implements GeoEntity {
                 entity -> this.isTamed() && entity instanceof Monster && !(entity instanceof CreeperEntity) && !this.isTeammate(entity)));
     }
 
-    private PlayState attacks(AnimationState<?> state) {
+    private PlayState attacks(mod.azure.azurelib.core.animation.AnimationState<GeoAnimatable> state) {
         switch (this.getState()) {
             case 1 -> state.getController().setAnimation(RawAnimation.begin().then("attack", Animation.LoopType.LOOP));
             case 2 -> state.getController().setAnimation(RawAnimation.begin().then("buff", Animation.LoopType.LOOP));

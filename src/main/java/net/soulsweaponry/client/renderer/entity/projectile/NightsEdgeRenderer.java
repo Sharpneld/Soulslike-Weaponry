@@ -1,12 +1,13 @@
 package net.soulsweaponry.client.renderer.entity.projectile;
 
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.soulsweaponry.client.model.entity.projectile.NightsEdgeModel;
 import net.soulsweaponry.entity.projectile.NightsEdge;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
 
 public class NightsEdgeRenderer extends GeoEntityRenderer<NightsEdge> {
 

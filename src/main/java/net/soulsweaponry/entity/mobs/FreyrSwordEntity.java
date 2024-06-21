@@ -1,5 +1,11 @@
 package net.soulsweaponry.entity.mobs;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.*;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.network.SerializableDataTicket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -38,11 +44,6 @@ import net.soulsweaponry.items.FreyrSword;
 import net.soulsweaponry.registry.EntityRegistry;
 import net.soulsweaponry.registry.WeaponRegistry;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
-import software.bernie.geckolib.core.object.PlayState;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -69,14 +70,7 @@ public class FreyrSwordEntity extends TameableEntity implements GeoEntity {
         this.setOwner(owner);
     }
 
-    public PlayState attack(AnimationState<?> state) {
-        if (this.getAnimationAttacking()) {
-            state.getController().setAnimation(RawAnimation.begin().then("attack_east", Animation.LoopType.LOOP));
-            return PlayState.CONTINUE;
-        }
-        state.getController().stop();
-        return PlayState.STOP;
-    }
+
 
     private PlayState idle(AnimationState<?> state) {
         if (!this.getAnimationAttacking()) {
@@ -93,6 +87,15 @@ public class FreyrSwordEntity extends TameableEntity implements GeoEntity {
         AnimationController<FreyrSwordEntity> idleController = new AnimationController<>(this, "idleController", 0, this::idle);
         controllers.add(attackController);
         controllers.add(idleController);
+    }
+
+    private PlayState attack(AnimationState<?> state) {
+        if (this.getAnimationAttacking()) {
+            state.getController().setAnimation(RawAnimation.begin().then("attack_east", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        }
+        state.getController().stop();
+        return PlayState.STOP;
     }
 
     @Override
@@ -279,6 +282,16 @@ public class FreyrSwordEntity extends TameableEntity implements GeoEntity {
         return factory;
     }
 
+    @Override
+    public double getBoneResetTime() {
+        return GeoEntity.super.getBoneResetTime();
+    }
+
+    @Override
+    public boolean shouldPlayAnimsWhileGamePaused() {
+        return GeoEntity.super.shouldPlayAnimsWhileGamePaused();
+    }
+
     public void setAnimationAttacking(boolean bl) {
         this.dataTracker.set(ATTACKING, bl);
     }
@@ -361,5 +374,35 @@ public class FreyrSwordEntity extends TameableEntity implements GeoEntity {
         if (nbt.contains(STACK_NBT)) {
             this.stack.setNbt((NbtCompound) nbt.get(STACK_NBT));
         }
+    }
+
+    @Override
+    public <D> @Nullable D getAnimData(SerializableDataTicket<D> dataTicket) {
+        return GeoEntity.super.getAnimData(dataTicket);
+    }
+
+    @Override
+    public <D> void setAnimData(SerializableDataTicket<D> dataTicket, D data) {
+        GeoEntity.super.setAnimData(dataTicket, data);
+    }
+
+    @Override
+    public void triggerAnim(@Nullable String controllerName, String animName) {
+        GeoEntity.super.triggerAnim(controllerName, animName);
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return GeoEntity.super.getTick(entity);
+    }
+
+    @Override
+    public @Nullable AnimatableInstanceCache animatableCacheOverride() {
+        return GeoEntity.super.animatableCacheOverride();
+    }
+
+    @Override
+    public boolean cannotBeSilenced() {
+        return super.cannotBeSilenced();
     }
 }

@@ -1,9 +1,9 @@
 package net.soulsweaponry.client.model.entity.mobs;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.minecraft.util.Identifier;
 import net.soulsweaponry.SoulsWeaponry;
 import net.soulsweaponry.entity.mobs.WarmthEntity;
-import software.bernie.geckolib.model.GeoModel;
 
 public class WarmthEntityModel extends GeoModel<WarmthEntity> {
 
